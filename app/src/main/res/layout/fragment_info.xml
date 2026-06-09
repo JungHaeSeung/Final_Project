@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="나만의 여행 일지"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="?android:attr/textColorPrimary"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="32dp"
+        android:text="Version 1.0.0\n소중한 여행의 기억을 기록하고 관리하세요."
+        android:gravity="center"
+        android:textColor="?android:attr/textColorSecondary"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#DDDDDD"
+        android:layout_marginBottom="24dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginBottom="12dp"
+        android:text="빠른 실행 및 고객지원"
+        android:textStyle="bold"
+        android:textSize="14sp"/>
+
+    <Button
+        android:id="@+id/btnGoogleMap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="추천 여행지 지도 열기 (구글맵)" />
+
+    <Button
+        android:id="@+id/btnHomepage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="공식 홈페이지 방문하기" />
+
+    <Button
+        android:id="@+id/btnSupportSMS"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="개발자에게 문의 문자 보내기" />
+
+</LinearLayout>

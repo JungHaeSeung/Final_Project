@@ -30,8 +30,8 @@ class HomeFragment : Fragment() {
 
         // 플로팅 버튼 누르면 -> 글쓰기 액티비티로 이동 (activity_main2를 액티비티로 띄울 예정)
         fabAdd.setOnClickListener {
-            // val intent = Intent(context, AddEditActivity::class.java)
-            // startActivity(intent)
+            val intent = Intent(context, AddEditActivity::class.java)
+            startActivity(intent)
         }
 
         return view
