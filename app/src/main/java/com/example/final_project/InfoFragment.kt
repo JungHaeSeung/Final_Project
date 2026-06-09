@@ -1,4 +1,4 @@
-package com.example.final_project // 본인 패키지명과 일치하는지 꼭 확인하세요!
+package com.example.final_project
 
 import android.content.Intent
 import android.net.Uri

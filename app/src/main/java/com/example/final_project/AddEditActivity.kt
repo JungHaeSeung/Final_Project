@@ -75,14 +75,25 @@ class AddEditActivity : AppCompatActivity() {
             val place = edtPlace.text.toString().trim()
             val memo = edit.text.toString().trim()
 
+            // 예외 처리: 여행지명이 비어있으면 컷
             if (place.isEmpty()) {
                 Toast.makeText(this, "여행지를 입력해주세요!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            // 우선 화면을 닫고 데이터가 잘 넘어가는지 토스트로 검증 (추후 SQLite DB에 insert)
-            Toast.makeText(this, "[$place] $selectedDate 기록 완료 (DB 저장 예정)", Toast.LENGTH_SHORT).show()
-            finish()
+            //dbHelper 객체 생성
+            val dbHelper = DBHelper(this)
+
+            // 2. 데이터 베이스에 데이터 삽입
+            val successRowId = dbHelper.insertTravel(place, selectedDate, memo)
+
+            // 3. 저장 결과에 따른 처리
+            if (successRowId != -1L) {
+                Toast.makeText(this, "『$place』 여행 일기가 저장되었습니다!", Toast.LENGTH_SHORT).show()
+                finish() // 저장이 완료되면 글쓰기 창 닫고 목록 화면으로 복귀
+            } else {
+                Toast.makeText(this, "저장에 실패했습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
