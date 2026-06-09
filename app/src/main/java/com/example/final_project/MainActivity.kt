@@ -83,17 +83,11 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun displayDiary(name: String) {
-
         val diText = readDiary(name)
-
         edtDiary.setText(diText)
-
         btnWrite.text = if (diText != null) "수정하기"
-
         else "새로 저장"
-
         edtDiary.hint = diText ?: "일기 없음"
-
 
 
         btnWrite.isEnabled = true
