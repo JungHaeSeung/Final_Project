@@ -42,34 +42,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // 새로 합친 레이아웃 파일 지정 (아래 2번에서 새로 작성할 파일)
-        //setContentView(R.layout.activity_main2)
-        //setContentView(R.layout.activity_main_container)
         setContentView(R.layout.activity_main2)
 
-        val mapFragment = supportFragmentManager
-            .findFragmentById(R.id.map) as? SupportMapFragment
-        mapFragment?.getMapAsync(this) // null 체크(?. 사용)
-
-
-        /* if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, InfoFragment())
-                .commit()
-        } */
-
-        // 지도 프래그먼트 초기화 및 연결
-        /*val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
-            ?: (supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment) */
-
-    /*
-        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
-
-        mapFragment.getMapAsync(this)
-
-     */
-
-        // 위젯 ID 연결하기
+        // 1. 위젯 ID 연결 (순서대로 한 번씩만 선언)
+        val btnHomeLayout = findViewById<ImageView>(R.id.btnHomeLayout )
+        val container = findViewById<android.widget.FrameLayout>(R.id.container)
         datePicker1 = findViewById(R.id.datePicker1)
         edtPlace = findViewById(R.id.edtPlace)
         edit = findViewById(R.id.edit)
@@ -78,52 +55,62 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         imagePreview = findViewById(R.id.imagePreview)
         btnWrite = findViewById(R.id.btnWrite)
 
-        // 날짜 설정
+        // 2. 지도 초기화
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
+        mapFragment?.getMapAsync(this)
+
+
+
+        // 3. 홈 버튼 로직
+        btnHomeLayout.setOnClickListener {
+            val container = findViewById<android.widget.FrameLayout>(R.id.container)
+            container.visibility = View.VISIBLE // 여기서 화면에 나타나게 합니다.
+
+            val transaction = supportFragmentManager.beginTransaction()
+            transaction.replace(R.id.container, InfoFragment())
+            transaction.addToBackStack(null)
+            transaction.commit()
+        }
+
+        // 4. 날짜 설정
         val cal = Calendar.getInstance()
         val y = cal.get(Calendar.YEAR)
         val m = cal.get(Calendar.MONTH)
         val d = cal.get(Calendar.DAY_OF_MONTH)
 
         selectedDate = String.format("%04d-%02d-%02d", y, m + 1, d)
-
         datePicker1.init(y, m, d) { _, year, monthOfYear, dayOfMonth ->
             selectedDate = String.format("%04d-%02d-%02d", year, monthOfYear + 1, dayOfMonth)
         }
 
-        // 사진 찍기 버튼 클릭
+        // 5. 버튼 클릭 로직들...
         btnCamera.setOnClickListener {
             val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            if (intent.resolveActivity(packageManager) != null) {
-                startActivityForResult(intent, REQUEST_IMAGE_CAPTURE)
-            }
+            startActivityForResult(intent, REQUEST_IMAGE_CAPTURE)
         }
 
-        // 갤러리 버튼 클릭
         btnGallery.setOnClickListener {
-            Toast.makeText(this, "갤러리 기능은 DB 연동 후 구현 예정입니다.", Toast.LENGTH_SHORT).show()
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/*"
+            startActivityForResult(intent, 200)
         }
 
-        // 저장하기 버튼 클릭
         btnWrite.setOnClickListener {
             val place = edtPlace.text.toString().trim()
             val memo = edit.text.toString().trim()
-
             if (place.isEmpty()) {
                 Toast.makeText(this, "여행지를 입력해주세요!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-
-            // DBHelper 객체 생성 (기존 자산 활용)
             val dbHelper = DBHelper(this)
             val successRowId = dbHelper.insertTravel(place, selectedDate, memo)
-
             if (successRowId != -1L) {
-                Toast.makeText(this, "『$place』 여행 일기가 저장되었습니다!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "『$place』 저장 완료!", Toast.LENGTH_SHORT).show()
                 edtPlace.setText("")
                 edit.setText("")
                 imagePreview.visibility = View.GONE
             } else {
-                Toast.makeText(this, "저장에 실패했습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "저장 실패", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -169,6 +156,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
 
     private fun moveToLocation(latLng: LatLng, title: String) {
         googleMap.clear()

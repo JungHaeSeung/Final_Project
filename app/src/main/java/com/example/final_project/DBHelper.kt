@@ -46,7 +46,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         }
 
         val result = db.insert(TABLE_NAME, null, contentValues)
-        db.close() // 사용 후 닫기 필수
+        //db.close() // 사용 후 닫기 필수
         return result
     }
 
