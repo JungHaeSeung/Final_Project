@@ -1,129 +1,217 @@
 package com.example.final_project
 
-import android.content.Context
-
+import android.app.AlertDialog
+import android.content.Intent
+import android.graphics.Bitmap
+import android.location.Geocoder
 import android.os.Bundle
-
+import android.provider.MediaStore
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import android.widget.Button
-
 import android.widget.DatePicker
-
 import android.widget.EditText
-
+import android.widget.ImageView
 import android.widget.Toast
-
 import androidx.appcompat.app.AppCompatActivity
-
-import java.io.IOException
-
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import java.util.Calendar
+import java.util.Locale
 
+class AddEditActivity : AppCompatActivity() {
 
+    // 1. XML 위젯들과 매핑할 변수 선언
+    private lateinit var datePicker1: DatePicker
+    private lateinit var edtPlace: EditText
+    private lateinit var edit: EditText
+    private lateinit var btnCamera: Button
+    private lateinit var btnGallery: Button
+    private lateinit var imagePreview: ImageView
+    private lateinit var btnWrite: Button
 
-class MainActivity : AppCompatActivity() {
+    private var selectedDate: String = ""
 
-
-
-    lateinit var datePicker1: DatePicker
-
-    lateinit var edtDiary: EditText
-
-    lateinit var btnWrite: Button
-
-    lateinit var fileName: String
-
-
+    // 카메라 촬영 결과를 받아오기 위한 구분 태그 (Project9_4 자산 활용)
+    private val REQUEST_IMAGE_CAPTURE = 101
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main2)
 
-        setContentView(R.layout.activity_main)
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
 
 
-
+        // 2. 위젯 ID 연결하기
         datePicker1 = findViewById(R.id.datePicker1)
-
-        edtDiary = findViewById(R.id.edit)
-
+        edtPlace = findViewById(R.id.edtPlace)
+        edit = findViewById(R.id.edit)
+        btnCamera = findViewById(R.id.btnCamera)
+        btnGallery = findViewById(R.id.btnGallery)
+        imagePreview = findViewById(R.id.imagePreview)
         btnWrite = findViewById(R.id.btnWrite)
 
-
-
+        // 3. 날짜 설정 (기존 캘린더 일기장 자산)
         val cal = Calendar.getInstance()
-
         val y = cal.get(Calendar.YEAR)
-
         val m = cal.get(Calendar.MONTH)
-
         val d = cal.get(Calendar.DAY_OF_MONTH)
 
-
-
-        fileName = "${y}_${m + 1}_$d.txt"
-
-        displayDiary(fileName)
-
-
+        // 초기 날짜 세팅 (형식: yyyy-MM-dd)
+        selectedDate = String.format("%04d-%02d-%02d", y, m + 1, d)
 
         datePicker1.init(y, m, d) { _, year, monthOfYear, dayOfMonth ->
-
-            fileName = "${y}_${m + 1}_$d.txt"
-
-            displayDiary(fileName)
-
+            selectedDate = String.format("%04d-%02d-%02d", year, monthOfYear + 1, dayOfMonth)
         }
 
-
-
-        btnWrite.setOnClickListener { saveDiary() }
-
-    }
-
-
-
-    private fun displayDiary(name: String) {
-        val diText = readDiary(name)
-        edtDiary.setText(diText)
-        btnWrite.text = if (diText != null) "수정하기"
-        else "새로 저장"
-        edtDiary.hint = diText ?: "일기 없음"
-
-
-        btnWrite.isEnabled = true
-
-    }
-
-
-
-// 여기 작성
-    private fun saveDiary() {
-        try {
-
-            openFileOutput(fileName, Context.MODE_PRIVATE).use { it.write(edtDiary.text.toString().toByteArray())}
-
-            Toast.makeText(this, "$fileName 이 저장됨", Toast.LENGTH_SHORT).show()
-
-        } catch (e: IOException) {
-
-            Toast.makeText(this, "파일 저장에 실패했습니다:  ${e.message}", Toast.LENGTH_SHORT).show()
-
+        // 사진 찍기 버튼 클릭 리스너 (Project9_4 암시적 인텐트)
+        btnCamera.setOnClickListener {
+            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            // 결과를 받아와야 하므로 startActivity가 아닌 startActivityForResult 사용
+            if (intent.resolveActivity(packageManager) != null) {
+                startActivityForResult(intent, REQUEST_IMAGE_CAPTURE)
+            }
         }
 
-    }
-
-    private fun readDiary(fName: String): String? {
-
-        return try {
-
-            openFileInput(fName).bufferedReader().use { it.readText().trim() }
-
-        } catch (e: IOException) {
-
-            null
-
+        // 5. 갤러리 버튼 클릭 리스너 (추후 구현 예정, 일단 토스트)
+        btnGallery.setOnClickListener {
+            Toast.makeText(this, "갤러리 기능은 DB 연동 후 구현 예정입니다.", Toast.LENGTH_SHORT).show()
         }
 
+        // 6. 저장하기 버튼 클릭 리스너
+        btnWrite.setOnClickListener {
+            val place = edtPlace.text.toString().trim()
+            val memo = edit.text.toString().trim()
+
+            // 예외 처리: 여행지명이 비어있으면 컷
+            if (place.isEmpty()) {
+                Toast.makeText(this, "여행지를 입력해주세요!", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            //dbHelper 객체 생성
+            val dbHelper = DBHelper(this)
+
+            // 2. 데이터 베이스에 데이터 삽입
+            val successRowId = dbHelper.insertTravel(place, selectedDate, memo)
+
+            // 3. 저장 결과에 따른 처리
+            if (successRowId != -1L) {
+                Toast.makeText(this, "『$place』 여행 일기가 저장되었습니다!", Toast.LENGTH_SHORT).show()
+                finish() // 저장이 완료되면 글쓰기 창 닫고 목록 화면으로 복귀
+            } else {
+                Toast.makeText(this, "저장에 실패했습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
+    override fun onMapReady(map: GoogleMap) {
+        googleMap = map
+
+        val soonchunhyang = LatLng(36.7690, 126.9314) //순천향대학교 기본위치
+
+        googleMap.moveCamera(
+            CameraUpdateFactory.newLatLngZoom(soonchunhyang, 16f)
+        )
+
+        googleMap.addMarker(
+            MarkerOptions()
+                .position(soonchunhyang)
+                .title("순천향대학교")
+                .snippet("아산 캠퍼스")
+        )
+
+        googleMap.uiSettings.isZoomG
+
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean{
+        return when (item.itemId) {
+            R.id.menu_normal -> {
+                googleMap.mapType = GoogleMap.MAP_TYPE_NORMAL
+                true
+            }
+
+            R.id.menu_satellite -> {
+                googleMap.mapType = GoogleMap.MAP_TYPE_SATELLITE
+                true
+            }
+
+            R.id.menu_search -> {
+                showSearchDialog()
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun moveToLaction(latLng: LatLng,title: String) {
+        googleMap.clear()
+
+        googleMap.addMarker(
+            MarkerOptions()
+                .position(latLng)
+                .title(title)
+        )
+
+        googleMap.animateCamera(
+            CameraUpdateFactory.newLatLngZoom(latLng, 16f)
+        )
+    }
+
+    private fun showSearchDialog() {
+        val editText = EditText(this)
+        editText.hint = "주소 또는 장소명 입력"
+
+        AlertDialog.Builder(this)
+            .setTitle("위치 검색")
+            .setView(editText)
+            .setPositiveButton("검색") {_, _ ->
+                val keyword = editText.text.toString()
+                searchLocation(keyword)
+            }
+            .setNeutralButton("취소",null)
+            .show()
+    }
+
+    private fun searchLocation(keyword: String) {
+        val geocoder = Geocoder(this, Locale.KOREA)
+
+        try{
+            val results = geocoder.getFromLocationName(keyword, 1)
+
+            if(!results.isNullOrEmpty()) {
+                val address = results[0]
+                val latLng = LatLng(address.latitude, address.longitude)
+
+                moveToLcation(latLng, keyword)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+    // 7. 카메라로 찍은 사진 결과 처리하기 (Project9_4 확장)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            // 찍은 사진을 비트맵 데이터로 가져옴
+            val imageBitmap = data?.extras?.get("data") as Bitmap?
+            if (imageBitmap != null) {
+                // 숨겨져 있던 이미지뷰를 보이게 하고 사진을 꽂아줌
+                imagePreview.visibility = View.VISIBLE
+                imagePreview.setImageBitmap(imageBitmap)
+            }
+        }
+    }
 }

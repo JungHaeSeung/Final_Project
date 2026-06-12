@@ -10,15 +10,17 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Final_Project"
-        >
+        android:theme="@style/Theme.Final_Project">
+
+        <meta-data
+            android:name="com.google.geo.API_KEY"
+            android:value="AIzaSyA3OX2OVUIpYr3sx4tlpSAPVw22pAbcSic"/>
         <activity android:name=".AddEditActivity" android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>

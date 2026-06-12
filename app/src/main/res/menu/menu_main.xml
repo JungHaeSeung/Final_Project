@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<item
+    android:id="@+id/menu_normal"
+    android:title="일반 지도"/>
+
+    <item
+        android:id="@+id/menu_satellite"
+        android:title="위성 지도"/>
+
+    <item
+        android:id="@+id/menu_search"
+        android:title="위치 검색"
+        android:icon="@android:drawable/ic_menu_search"
+        />
+</menu>
