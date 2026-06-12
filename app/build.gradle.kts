@@ -4,16 +4,15 @@ plugins {
 
 android {
     namespace = "com.example.final_project"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.final_project"
         minSdk = 30
-        targetSdk = 36
+
+        // 🎯 타겟 SDK도 에뮬레이터와 동기화되도록 35로 맞춰주는 게 안전해!
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 

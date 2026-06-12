@@ -43,11 +43,31 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // 새로 합친 레이아웃 파일 지정 (아래 2번에서 새로 작성할 파일)
+        //setContentView(R.layout.activity_main2)
+        //setContentView(R.layout.activity_main_container)
         setContentView(R.layout.activity_main2)
 
+        val mapFragment = supportFragmentManager
+            .findFragmentById(R.id.map) as? SupportMapFragment
+        mapFragment?.getMapAsync(this) // null 체크(?. 사용)
+
+
+        /* if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, InfoFragment())
+                .commit()
+        } */
+
         // 지도 프래그먼트 초기화 및 연결
+        /*val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
+            ?: (supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment) */
+
+    /*
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
+
         mapFragment.getMapAsync(this)
+
+     */
 
         // 위젯 ID 연결하기
         datePicker1 = findViewById(R.id.datePicker1)

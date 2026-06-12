@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="나만의 여행 일지"
+        android:text="나만의 여행 일지 예약"
         android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="?android:attr/textColorPrimary"/>
@@ -45,19 +45,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:text="추천 여행지 지도 열기 (구글맵)" />
+        android:text="추천 여행지 지도 열기" />
 
     <Button
         android:id="@+id/btnHomepage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:text="공식 홈페이지 방문하기" />
+        android:text="공식 홈페이지 방문하기(미정)" />
 
     <Button
         android:id="@+id/btnSupportSMS"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="개발자에게 문의 문자 보내기" />
+        android:text="개발자에게 문의 문자 보내기(미정)" />
+
 
 </LinearLayout>
