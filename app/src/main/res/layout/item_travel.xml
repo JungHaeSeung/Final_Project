@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="200dp"
     android:layout_margin="6dp"
@@ -16,7 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@android:drawable.ic_menu_gallery" />
+            android:src="@android:drawable/ic_menu_gallery"
+            android:contentDescription="여행 사진 미리보기" />
 
         <View
             android:layout_width="match_parent"
@@ -35,7 +37,7 @@
                 android:id="@+id/tvPlace"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="부산 해운대"
+                tools:text="부산 해운대"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -45,7 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:text="2026-06-10"
+                tools:text="2026-06-10"
                 android:textColor="#DDFFFFFF"
                 android:textSize="12sp" />
         </LinearLayout>

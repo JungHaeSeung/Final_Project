@@ -15,7 +15,6 @@ class HomeFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var fabAdd: FloatingActionButton
 
-
     private lateinit var dbHelper: DBHelper
     private var travelList = ArrayList<TravelItem>()
     private lateinit var adapter: TravelAdapter
@@ -33,8 +32,9 @@ class HomeFragment : Fragment() {
 
         recyclerView.layoutManager = GridLayoutManager(context, 2)
 
+
         fabAdd.setOnClickListener {
-            val intent = Intent(context, AddEditActivity::class.java)
+            val intent = Intent(context, MainActivity::class.java)
             startActivity(intent)
         }
 
@@ -70,7 +70,7 @@ class HomeFragment : Fragment() {
             cursor.close()
         }
 
-        //데이터셋이 완성되었으므로 어댑터를 새로 만들거나 갱신하여 리사이클러뷰에 바인딩
+        // 데이터셋이 완성되었으므로 어댑터를 새로 만들거나 갱신하여 리사이클러뷰에 바인딩
         adapter = TravelAdapter(requireContext(), travelList)
         recyclerView.adapter = adapter
     }

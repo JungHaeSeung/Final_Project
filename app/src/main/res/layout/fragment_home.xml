@@ -27,6 +27,6 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="24dp"
         android:contentDescription="여행 추가"
-        app:srcCompat="@android:drawable.ic_input_add" />
+        app:srcCompat="@android:drawable/ic_input_add" />
 
 </RelativeLayout>
