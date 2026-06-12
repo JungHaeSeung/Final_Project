@@ -33,7 +33,7 @@
             android:id="@+id/btnHomeIcon"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@android:drawable/ic_menu_home"
+            android:src="@android:drawable/ic_menu_more"
             android:tint="#000000" />
 
         <TextView

@@ -13,6 +13,7 @@ import android.widget.Button
 import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -44,8 +45,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2)
 
-        // 1. 위젯 ID 연결 (순서대로 한 번씩만 선언)
-        val btnHomeLayout = findViewById<ImageView>(R.id.btnHomeLayout )
+        //위젯 ID 연결 (순서대로 한 번씩만 선언)
+        val btnHomeLayout = findViewById<LinearLayout>(R.id.btnHomeLayout )
         val container = findViewById<android.widget.FrameLayout>(R.id.container)
         datePicker1 = findViewById(R.id.datePicker1)
         edtPlace = findViewById(R.id.edtPlace)
@@ -55,13 +56,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         imagePreview = findViewById(R.id.imagePreview)
         btnWrite = findViewById(R.id.btnWrite)
 
-        // 2. 지도 초기화
+        //지도 초기화
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
         mapFragment?.getMapAsync(this)
 
 
 
-        // 3. 홈 버튼 로직
+        //홈 버튼 로직
         btnHomeLayout.setOnClickListener {
             val container = findViewById<android.widget.FrameLayout>(R.id.container)
             container.visibility = View.VISIBLE // 여기서 화면에 나타나게 합니다.
@@ -72,7 +73,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             transaction.commit()
         }
 
-        // 4. 날짜 설정
+        //날짜 설정
         val cal = Calendar.getInstance()
         val y = cal.get(Calendar.YEAR)
         val m = cal.get(Calendar.MONTH)
@@ -83,7 +84,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             selectedDate = String.format("%04d-%02d-%02d", year, monthOfYear + 1, dayOfMonth)
         }
 
-        // 5. 버튼 클릭 로직들...
+        //버튼 클릭 로직들
         btnCamera.setOnClickListener {
             val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             startActivityForResult(intent, REQUEST_IMAGE_CAPTURE)
